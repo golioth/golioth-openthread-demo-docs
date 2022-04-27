@@ -9,13 +9,13 @@ const config = {
   title: 'Golioth Thread Demo',
   tagline: 'Get a Golioth-managed Thread network up and running, including border router',
   url: 'https://golioth.github.io',
-  baseUrl: '/thread-full-demo/',
+  baseUrl: '/golioth-thread-demo/',
   trailingSlash: false,
   onBrokenLinks: 'throw',
   onBrokenMarkdownLinks: 'warn',
   favicon: 'img/favicon.ico',
   organizationName: 'golioth', // Usually your GitHub org/user name.
-  projectName: 'thread-full-demo', // Usually your repo name.
+  projectName: 'golioth-thread-demo', // Usually your repo name.
 
   presets: [
     [
@@ -25,7 +25,7 @@ const config = {
         docs: {
           sidebarPath: require.resolve('./sidebars.js'),
           // Please change this to your repo.
-          //editUrl: 'https://github.com/golioth/thread-full-demo',
+          //editUrl: 'https://github.com/golioth/golioth-thread-demo',
         },
         theme: {
           customCss: require.resolve('./src/css/custom.css'),
@@ -51,7 +51,7 @@ const config = {
             label: 'Start Here',
           },
           {
-            href: 'https://github.com/golioth/thread-full-demo',
+            href: 'https://github.com/golioth/golioth-thread-demo',
             label: 'Document Repo',
             position: 'right',
           },

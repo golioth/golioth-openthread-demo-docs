@@ -1,6 +1,6 @@
 {
-  "name": "golioth-developer-training",
-  "version": "0.0.1",
+  "name": "golioth-thread-demo",
+  "version": "0.0.0",
   "private": true,
   "scripts": {
     "docusaurus": "docusaurus",
