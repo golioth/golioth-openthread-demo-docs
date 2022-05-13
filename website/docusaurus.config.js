@@ -9,13 +9,13 @@ const config = {
   title: 'Golioth Thread Demo',
   tagline: 'Get a Golioth-managed Thread network up and running, including border router',
   url: 'https://golioth.github.io',
-  baseUrl: '/golioth-thread-demo/',
+  baseUrl: '/golioth-openthread-demo-docs/',
   trailingSlash: false,
   onBrokenLinks: 'throw',
   onBrokenMarkdownLinks: 'warn',
   favicon: 'img/favicon.ico',
   organizationName: 'golioth', // Usually your GitHub org/user name.
-  projectName: 'golioth-thread-demo', // Usually your repo name.
+  projectName: 'golioth-openthread-demo-docs', // Usually your repo name.
 
   presets: [
     [
@@ -51,7 +51,7 @@ const config = {
             label: 'Start Here',
           },
           {
-            href: 'https://github.com/golioth/golioth-thread-demo',
+            href: 'https://github.com/golioth/golioth-openthread-demo-docs',
             label: 'Document Repo',
             position: 'right',
           },
