@@ -1,4 +1,4 @@
-# Golioth Thread Demo Docs Repo
+# Golioth OpenThread Demo Docs Repo
 
 This is the repo for the Golioth Thread Demo. Here we have two main items:
 * [The Docusaurus v2 based website](https://golioth.github.io/thread-full/demo/) that includes all training material
