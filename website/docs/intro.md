@@ -8,6 +8,10 @@ sidebar_position: 1
 
 This is a place where you're going to learn about Golioth features and how to create Thread networks by playing with hardware. 
 
+### System diagram
+
+![Thread_System_Diagram](Thread_system_Diagram.png)
+
 ## How can you use this material after training is over?
 
 Developers who successfully complete this training should feel confident that they will be able to program and deploy a simple Threaad based IoT system to the field in their application.
