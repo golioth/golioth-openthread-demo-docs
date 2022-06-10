@@ -4,9 +4,9 @@ sidebar_position: 1
 
 # Create an RCP USB dongle
 
-The RCP dongle uses a $10 nRF52 Dongle from Nordic Semiconductor. Programming this image to the nRF52840 on board turns the mainchipset into a passthrough "modem" for Thread networks, using the 802.15.4 stack from Nordic Semiconductor and the OpenThread project. 
+The RCP dongle uses a [$10 nRF52 Dongle from Nordic Semiconductor](https://www.digikey.com/en/products/detail/nordic-semiconductor-asa/NRF52840-DONGLE/9491124). Programming this image to the nRF52840 on board turns the mainchipset into a passthrough "modem" for Thread networks, using the 802.15.4 stack from Nordic Semiconductor and the OpenThread project. 
 
-## Obtaining the RCP Joiner binary
+## Step 1: Obtaining the RCP Joiner binary
 
 ### Binary download (Preferred)
 
@@ -26,7 +26,7 @@ That tutorial site shows how to create a Thread network without a Border Router,
 
 *NOTE: You will need the ARM GNU toolchain as explained in ["Step 2: Getting Started" guide](https://openthread.io/codelabs/openthread-hardware#0) on that page.* 
 
-## Programming to the dongle
+## Step 2: Programming to the dongle
 
 
 ### Using the built-in bootloader (Preferred)
@@ -52,3 +52,5 @@ Notes
 You will need:
 * JLink programmer (nRF52840 can act as programmer)
 * 10 pin tag connect cable
+
+## Step 3: Testing the RCP

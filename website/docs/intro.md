@@ -6,11 +6,23 @@ sidebar_position: 1
 
 ## What is this Demo all about?
 
-This is a place where you're going to learn about Golioth features and how to create Thread networks by playing with hardware. 
+This is a place where you're going to learn about Golioth features and how to create a network of Thread devices by playing with hardware. 
 
 ### System diagram
 
 ![Thread_System_Diagram](Thread_system_Diagram.png)
+
+## What is Thread?
+
+Thread (and the OpenThread implementation we are using here) is a networking protocol built on top of 802.15.4. It handles the network setup and meshing of small devices using 2.4 GHz radios. Once the network is set up, each device on the mesh network will have it's own IPv6 address and be speaking using CoAP (a transport layer) over UDP. 
+
+Because Golioth has CoAP-based API endpoints on the web, and we can now talk directly to the IPv6 addressed devices, it's possible to use the Golioth console as a management platform for Thread based devices!
+
+### High Level Video overview
+
+[Smart Home Protocols](https://www.youtube.com/channel/UCrVLgIniVg6jW38uVqDRIiQ) made this video showcasing how Thread works, especially in a consumer setting
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/0JC4tNe0OS4" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
 ## How can you use this material after training is over?
 
