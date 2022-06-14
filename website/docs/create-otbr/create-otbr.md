@@ -10,7 +10,8 @@ The OpenThread Border Router (OTBR) is a solution to get your packets from your 
 
 * Raspberry Pi
   * You will need a Raspberry Pi to be able to utilize the RCP via a USB port and then process all packets. 
-  * We have tested this on the Raspberry Pi 3 and 4. See the additional directions below for the smaller RPi Zero 2W.
+  * We have tested this on the Raspberry Pi 3 and 4. Additional steps are required if using the smaller RPi Zero 2W.
+  * We recommend you also have a monitor, HDMI cable, and USB Mouse/Keyboard available.
 * MicroSD Card 
   * 8 GB Minimum
 * RCP 
@@ -22,7 +23,7 @@ The OpenThread Border Router (OTBR) is a solution to get your packets from your 
 
 The directions below were derived from [the Codelabs OpenThread directions for the Raspberry Pi](https://openthread.io/guides/border-router/raspberry-pi). We are replicating them here to reduce the directions down to the absolutely necessary steps to replicate our setup. 
 
-We recommend using [the "Raspberry Pi OS with desktop" downloaded from the official repo page](https://www.raspberrypi.com/software/operating-systems/), as it allows you to showcase the OTBR web interface directly from your Raspberry Pi. We do this on [the Golioth Red Demo at conferences](https://blog.golioth.io/golioth-showcase-at-zds/) with a built-in screen. It is very useful to be able to directly navigate to the web browser on a monitor and commission the network. 
+We recommend using [the "Raspberry Pi OS with desktop" downloaded from the official repo page](https://www.raspberrypi.com/software/operating-systems/), as it allows you to showcase the OTBR web interface directly from your Raspberry Pi. We do this on [the Golioth Red Demo at conferences](https://blog.golioth.io/golioth-showcase-at-zds/) with a built-in screen. It is very useful to be able to directly navigate to the web browser on a monitor and commission the network. We also recommend you have a mouse and keyboard attached during install, as this is how the Raspberry Pi was designed to be commissioned. 
 
 Burn the downloaded image to an SD card on your computer: 
 
@@ -75,7 +76,7 @@ sudo apt install tayga
 
 Once you have tayga avilable on your computer, you need to ensure it is configured to properly route packets. 
 
-Change tayga config file `/etc/tayga.conf`
+Change (or confirm) the following settings in the tayga config file `/etc/tayga.conf`
 
 ```
 tun-device nat64
@@ -86,6 +87,20 @@ dynamic-pool 192.168.255.0/24
 data-dir /var/spool/tayga
 ```
 
+Test that `tayga` is running 
+
+```
+sudo service tayga status
+```
+
+
+
+You should see a screen that shows the service listed as `active`. Type `q` to escape the status screen at any time. If the service is now showing as activenotnot, start (or restart) the service using the command 
+
+```
+sudo service tayga start
+```
+
 Finally, we want to add a route to `tayga` so that it knows how to route packets out to the internet. 
 
 ```
@@ -94,3 +109,41 @@ sudo ot-ctl netdata register
 ```
 
 ## Step 6: Testing OTBR
+
+Now that you have your OTBR set up, you'll want to test it.
+
+First, see if you can ping a Google DNS server (8.8.8.8) on its IPv6 address:
+
+```
+ping 64:ff9b::808:808
+```
+
+You should see responses, even though you're not pinging from the Thread node. This shows that the IPv6 -> IPv4 routing is working.
+
+Next, make sure your `otbr-agent` and `otbr-web` are up and running. The agent does the handling of incoming traffic on the Thread network on the RCP, as well as moving packets through to the internet. 
+
+```
+sudo service otbr-agent status
+```
+
+The `otbr-web` hosts a webpage on port 80, which makes it much simpler to set up and troubleshoot your network.
+
+```
+sudo service otbr-web status
+```
+
+You should see a page at https://localhost if logged in to the Raspberry Pi. If you're accessing the RPi via SSH, you can access the page at the device's IP address, like http://192.168.1.2 (check your router to see what the address was assigned to the RPi)
+
+![OTBR-Web-Status](otbr-web-status.png)
+
+On the page above, I navigated to the "Status" tab on the left side menu, which shows teh following troubleshooting information. You should also be able to access this using various commands options in the `ot-ctl` command.
+
+## Step 7: Forming a Thread Network
+
+Click on the "Form" tab on the left side of the web interface (3rd option). 
+
+![OTBR-Web-Form](otbr-web-form.png)
+
+The Network Name and Network Key operate much like a WiFi SSID and password. These will be used later, so note them down if you use something different from the default (recommended).
+
+Click the blue "FORM" button and verify that you want to form a network.

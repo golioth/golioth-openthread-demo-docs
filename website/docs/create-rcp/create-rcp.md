@@ -6,7 +6,14 @@ sidebar_position: 1
 
 The RCP dongle uses a [$10 nRF52 Dongle from Nordic Semiconductor](https://www.digikey.com/en/products/detail/nordic-semiconductor-asa/NRF52840-DONGLE/9491124). Programming this image to the nRF52840 on board turns the mainchipset into a passthrough "modem" for Thread networks, using the 802.15.4 stack from Nordic Semiconductor and the OpenThread project. 
 
-## Step 1: Obtaining the RCP Joiner binary
+
+## Step 1: Obtain supplies
+
+* [nRF52840 Dongle](https://www.digikey.com/en/products/detail/nordic-semiconductor-asa/NRF52840-DONGLE/9491124)
+
+## Step 2: Obtain RCP Joiner binary
+
+The RCP Joiner binary will be installed onto the nRF52840 dongle. This will allow the dongle to act as a "modem" for 802.15.4 devices.
 
 ### Binary download (Preferred)
 
@@ -26,7 +33,7 @@ That tutorial site shows how to create a Thread network without a Border Router,
 
 *NOTE: You will need the ARM GNU toolchain as explained in ["Step 2: Getting Started" guide](https://openthread.io/codelabs/openthread-hardware#0) on that page.* 
 
-## Step 2: Programming to the dongle
+## Step 2: Program the dongle
 
 
 ### Using the built-in bootloader (Preferred)
