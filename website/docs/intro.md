@@ -10,7 +10,7 @@ This is a place where you're going to learn about Golioth features and how to cr
 
 ### System diagram
 
-![Thread_System_Diagram](Thread_system_Diagram.png)
+![Thread_System_Diagram](OpenThread_Golioth_Diagram.png)
 
 ## What is Thread?
 
