@@ -51,10 +51,26 @@ const config = {
             label: 'Start Here',
           },
           {
-            href: 'https://github.com/golioth/golioth-openthread-demo-docs',
-            label: 'Document Repo',
+            href: 'https://blog.golioth.io/build-a-customized-thread-network-using-off-the-shelf-components',
+            label: 'Blog post',
             position: 'right',
           },
+          {
+            href: 'https://www.youtube.com/watch?v=G5l0G-b9hU4&feature=youtu.be',
+            label: 'YouTube tutorial',
+            position: 'right',
+          },
+          {
+            href: 'https://github.com/golioth/golioth-openthread-demo',
+            label: 'Code Repo',
+            position: 'right',
+          },
+          {
+            href: 'https://github.com/golioth/golioth-openthread-demo-docs',
+            label: 'Docs Repo',
+            position: 'right',
+          },
+
         ],
       },
       footer: {
