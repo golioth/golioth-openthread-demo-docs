@@ -6,7 +6,11 @@ sidebar_position: 1
 
 ## What is this Demo all about?
 
-This is a place where you're going to learn about Golioth features and how to create a network of Thread devices by playing with hardware. 
+This is a place where you're going to learn abouthow to create a network of Thread devices by playing with hardware. First we'll set up the pieces required to connect your Thread network to the internet. After that, we'll compile custom code to allow a small, low-power device to send custom data packets to the internet through the Golioth Device Management Layer.
+## Additional Resources
+* [Blog post: "Build a customized Thread network using off-the-shelf components"](https://blog.golioth.io/build-a-customized-thread-network-using-off-the-shelf-components)
+* [YouTube video showing building and troubleshooting a Thread network](https://youtu.be/G5l0G-b9hU4)
+* [Code repo on GitHub for Thread nodes](https://github.com/golioth/golioth-openthread-demo)
 
 ### System diagram
 
@@ -20,7 +24,7 @@ Thread (and the OpenThread implementation we are using here) is a networking pro
 
 [Smart Home Protocols](https://www.youtube.com/channel/UCrVLgIniVg6jW38uVqDRIiQ) made this video showcasing how Thread works, especially in a consumer setting
 
-<iframe width="560" height="315" src="https://www.youtube.com/embed/0JC4tNe0OS4" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+<p align="center"><iframe width="640" height="480" src="https://www.youtube.com/embed/0JC4tNe0OS4" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></p>
 
 ## Why Golioth is a great fit for Thread applications
 
@@ -35,4 +39,4 @@ We will showcase many of these functions in the [Thread Node section](create-thr
 
 ## How can you use this material after training is over?
 
-Developers who successfully complete this training should feel confident that they will be able to program and deploy a simple Thread based IoT system to the field in their application.
+Developers who successfully complete this training should feel confident that they will be able to program and deploy a simple Thread based IoT system to the field in their application. They will be able to program a custom end node to talk back over a Thread network to the Golioth management layer.
