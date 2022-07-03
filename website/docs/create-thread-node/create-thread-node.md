@@ -8,17 +8,15 @@ Now that we have set up an OTBR in the previous step, we want to build a Node th
 
 ## Step 1: Obtain supplies
 
-* **Option 1**
-  * nRF52840-DK
+* **Option 1** (Preferred)
+  * [BT510 from Laird](https://www.lairdconnect.com/iot-devices/iot-sensors/bt510-bluetooth-5-long-range-ip67-multi-sensor)
+  * [Laird SWD USB programming kit](https://www.lairdconnect.com/wireless-modules/programming-kits/usb-swd-programming-kit)
 * **Option 2**
-  * BT510 from Laird
-  * A separate programmer/debugger board
+  * nRF52840-DK
 
 ### Comparing options
 
-In **Option 1**, the programmer and debugger are built into the nRF52840-DK, so no external one is required (lower cost, lower complexity). However, the nRF52840-DK does not have any sensors onboard, so we will only be able to send data like the core temperature of the silicon chip. Adding external sensors is outside the scope of this tutorial, but is definitely possible later. 
-
-For **Option 2**, we chose a board that is already in a case and could easily be deployed in the field. It is IP67, which means it will stand up to the elements. It also has sensors onboard:
+For **Option 1**, we chose a board that is already in a case and could easily be deployed in the field. It is IP67, which means it will stand up to the elements. It also has sensors onboard:
 * Temperature
 * Accelerometer
 * Magnetic detection
@@ -30,6 +28,92 @@ There are also interactive elements on this board, including:
 
 The downside to the BT510 is that the board only has the chip on-board, so it requires an additional programmer in order to interact with the chip. There is a serial port interface built into this programmer as well. 
 
-## Step 2: Program your device
+In **Option 2**, the programmer and debugger are built into the nRF52840-DK, so no external one is required (lower cost, lower complexity). However, the nRF52840-DK does not have any sensors onboard, so we will only be able to send data like the core temperature of the silicon chip. Adding external sensors is outside the scope of this tutorial, but is definitely possible later. 
 
-If you have not yet done so, go through the [Golioth Getting Started Guide](https://docs.golioth.io/getting-started), in order to get credentials on the Golioth Cloud.
+## Step 2: Get device credentials
+
+If you have not yet done so, go through the [Golioth Getting Started Guide](https://docs.golioth.io/getting-started), in order to get credentials on the Golioth Cloud. 
+
+Grab credentials from [the "devices" tab on the Golioth Console](https://console.golioth.io/devices). The Pre-Shared Key Identification (PSK ID) and Pre-Shared Key (PSK) are similar to a username/password combination. Your node device will need these credentials to validate onto the Golioth network. We will program them in via the serial terminal once the device is programmed.
+
+![openthread-golioth-credentials](openthread-golioth-credentials.png)
+
+## Step 3: Install dependencies (first time Zephyr users)
+
+If this is your first time working with Zephyr, you will need to install the Zephyr support tools in order to build the firmware for the node device. If you have used Zephyr before, you almost certainly have all of these dependencies statisfied on your system and you can skip to Step 4. 
+
+### Linux System Dependencies
+
+We are showing how to build in Linux, which is the preferred method. The tools below will ensure you have Python set up properly and are able to access other tools like `wget`. 
+
+```
+sudo apt update
+sudo apt install --no-install-recommends git cmake ninja-build gperf \
+  ccache dfu-util device-tree-compiler wget \
+  python3-dev python3-pip python3-setuptools python3-tk python3-wheel xz-utils file \
+  make gcc gcc-multilib g++-multilib libsdl2-dev
+```
+
+### Zephyr Compilers
+
+If this is the first time you are using Zephyr, you will also need the compiler for building the code (`gcc`, for example). This is known as the Zephyr SDK, which is a bit confusing, but is ultimately a bunch of compilers bundled together. Once you have these in your system, you will be able to build firmware for any of the supported Zephyr boards, not just nRF52840.
+
+```
+cd ~
+wget https://github.com/zephyrproject-rtos/sdk-ng/releases/download/v0.14.2/zephyr-sdk-0.14.2_linux-x86_64.tar.gz
+```
+
+Unpack the archive and run the installer. The SDK will be placed in the ~/zephyr-sdk-0.14.2 directory:
+```
+tar -xvf zephyr-sdk-0.14.2_linux-x86_64.tar.gz
+cd zephyr-sdk-0.14.2
+./setup.sh
+```
+Answer y to both of the questions asked during the setup process.
+
+Install udev rules, which allow you to flash most Zephyr boards as a regular user:
+```
+sudo cp ~/zephyr-sdk-0.14.2/sysroots/x86_64-pokysdk-linux/usr/share/openocd/contrib/60-openocd.rules /etc/udev/rules.d/
+sudo udevadm control --reload
+```
+
+## Step 4: Download the repo
+
+Now that dependencies are installed, we are ready to compile the node firmware using Zephyr, Golioth, and OpenThread.
+
+The repository we're using is called a "standalone repository" from the Golioth OpenThread Demo. This not only has the source code that you will be able to change, but it also calls out the dependencies in order to build all of the underlying tooling, such as the OpenThread stack. We will be using Nordic Semiconductor's Nordic Connect SDK (NCS) as part of the setup. This will allow us to build the firmware for the nRF52840, the chip inside the BT510. 
+
+First, we'll create a virtual environment for our system
+``` 
+python3 -m venv ~/golioth-openthread/.venv
+source ~/golioth-openthread/.venv/bin/activate
+pip install west
+```
+
+Then we clone the Golioth OpenThread repository (including `app/west.yml` which lists all the dependencies and which versions to go fetch)
+
+```
+west init -m https://github.com/golioth/golioth-openthread-demo.git ~/golioth-openthread
+cd golioth-openthread
+```
+
+Finally, we tell `west` (the meta tool build system) to go and fetch all of the dependencies, including specific versions of NCS. After the update, we'll tell the system where to find everything.
+
+```
+west update
+west zephyr-export
+pip install -r ~/golioth-ncs-workspace/zephyr/scripts/requirements.txt
+```
+
+## Step 5: Compile and flash the code
+
+OK, phew, we made it! (didn't make it? [Let us know on our forum](https://forum.golioth.io) for more help)
+
+Now we're finally ready to build the firmware. The nice thing is that the BT510 device that we're targeting already is a supported board in Zephyr. The command to build for that board is simply:
+
+```
+west build -b bt510 app
+west flash
+```
+
+The flash step requires that you have the SWD USB Programmer pluged into your computer and the board.  
