@@ -56,7 +56,7 @@ sudo apt install --no-install-recommends git cmake ninja-build gperf \
 
 ### Zephyr Compilers
 
-If this is the first time you are using Zephyr, you will also need the compiler for building the code (`gcc`, for example). This is known as the Zephyr SDK, which is a bit confusing, but is ultimately a bunch of compilers bundled together. Once you have these in your system, you will be able to build firmware for any of the supported Zephyr boards, not just nRF52840.
+If this is the first time you are using Zephyr, you will also need the compiler for building the code (`gcc`, for example). This is known as the Zephyr SDK Toolchain, which is a bit confusing, but is ultimately a bunch of compilers bundled together. Once you have these in your system, you will be able to build firmware for any of the supported Zephyr boards, not just nRF52840.
 
 ```
 cd ~
@@ -116,4 +116,47 @@ west build -b bt510 app
 west flash
 ```
 
-The flash step requires that you have the SWD USB Programmer pluged into your computer and the board.  
+The flash step requires that you have the SWD USB Programmer pluged into your computer and the board.
+
+## Step 6: Add device to Thread network
+
+The OpenThread shell gives you the ability to configure and query the state of the Thread network you are connecting to. Many of the commands available on the command line (shell) are also available as settings in `menuconfig` and can be set via project settings (`prj.conf`) or in board settings (`<boardname>.conf`) inside the boards folder. We are going to set these manually because learning is important. You will set the credentials of your device using the same credentials you set on the OTBR. There are default OTBR credentials that we will be using below, but be sure to check the credentials on your particular OTBR.
+
+Connect to your device over UART. The Laird USB SWD programmer has a UART built in. On linux machines this may look like `/dev/ttyUSB0`. Once you have connected, use the `ot` command to query and set configurations in the OpenThread stack.
+
+```
+uart:~$ ot ifconfig down
+uart:~$ ot dataset networkkey 00112233445566778899aabbccddeeff
+uart:~$ ot dataset networkname OpenThreadDemo
+uart:~$ ot dataset commit active
+uart:~$ ot ifconfig up
+uart:~$ ot thread start
+```
+
+This should give us the credentials to get the BT510 onto the local Thread network created by the OTBR. Run the following command to check status.
+
+```
+uart:~$ ot state
+```
+
+You should see it report as `child` or `router`. You can also check the "Topology" tab on the OTBR to see if a device has joined the network (should be two dots connected by a line instead of one dot by itself)
+
+After the node has successfully connected to the Thread network, it has access to the internet! You should be able to ping Google DNS servers from the node, just like you did from the OTBR:
+
+```
+uart:~$ ot ping 64:ff9b::808:808    
+```
+
+## Step 7: Add Golioth credentials
+
+Now that we can talk to the internet, let's get this thing hooked to Golioth. Doing so will give us a convenient way to collect data, send commands back to devices, and update firmware. We will be using the [Settings Shell](https://blog.golioth.io/new-feature-updating-zephyr-settings-from-the-device-shell-and-more/), which is already compiled into the code. 
+
+Once again we will connect to the UART on the device (you may still be connected) and assign your credentials gained in Step 2:
+
+```
+uart:~$ settings set golioth/psk-id <my-psk-id@my-project>
+uart:~$ settings set golioth/psk <my-psk>
+uart:~$ kernel reboot cold
+```
+
+The final command is the kernel shell, where we can send a reset command over the UART. Once a reboot happens, we should see that the device once again connects to the Thread network, and can now reach out to Golioth servers and start sending data. The settings are saved into a special area of flash that will persist between reboots. 
