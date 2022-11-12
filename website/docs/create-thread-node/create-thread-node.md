@@ -118,6 +118,17 @@ west flash
 
 The flash step requires that you have the SWD USB Programmer pluged into your computer and the board.
 
+:::note
+If you're using the nRF52840DK you'll need to disable the onboard sensors in the prj.conf
+
+# CONFIG_I2C=y
+# CONFIG_SENSOR=y
+# CONFIG_SI7055=y
+
+# CONFIG_ADC=y
+# CONFIG_ADC_SHELL=y
+:::
+
 ## Step 6: Add device to Thread network
 
 The OpenThread shell gives you the ability to configure and query the state of the Thread network you are connecting to. Many of the commands available on the command line (shell) are also available as settings in `menuconfig` and can be set via project settings (`prj.conf`) or in board settings (`<boardname>.conf`) inside the boards folder. We are going to set these manually because learning is important. You will set the credentials of your device using the same credentials you set on the OTBR. There are default OTBR credentials that we will be using below, but be sure to check the credentials on your particular OTBR.
