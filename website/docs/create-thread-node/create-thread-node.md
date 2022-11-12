@@ -4,7 +4,7 @@ sidebar_position: 1
 
 # Create a node on your Thread Network
 
-Now that we have set up an OTBR in the previous step, we want to build a Node that will begin communicating to the wider internet using the OTBR. The node will be built using Zephyr and will have the OpenThread stack compiled into it. Golioth has a starter project on GitHub that will be used throughout this section of the tutorial. This has all of the Golioth required elements to get a Node connected to the Golioth Cloud and transmitting data back and forth. This code also includes a shell to interact directly with your device and program in credentials for both connecting to your OTBR and validating onto the Golioth netwwork. 
+Now that we have set up an OTBR in the previous step, we want to build a Node that will begin communicating to the wider internet using the OTBR. The node will be built using Zephyr and will have the OpenThread stack compiled into it. Golioth has a starter project on GitHub that will be used throughout this section of the tutorial. This has all of the Golioth required elements to get a Node connected to the Golioth Cloud and transmitting data back and forth. This code also includes a shell to interact directly with your device and program in credentials for both connecting to your OTBR and validating onto the Golioth netwwork.
 
 ## Step 1: Obtain supplies
 
@@ -26,13 +26,13 @@ There are also interactive elements on this board, including:
 * A push button that can be accessed from outside the package
 * A bi-color user LED
 
-The downside to the BT510 is that the board only has the chip on-board, so it requires an additional programmer in order to interact with the chip. There is a serial port interface built into this programmer as well. 
+The downside to the BT510 is that the board only has the chip on-board, so it requires an additional programmer in order to interact with the chip. There is a serial port interface built into this programmer as well.
 
-In **Option 2**, the programmer and debugger are built into the nRF52840-DK, so no external one is required (lower cost, lower complexity). However, the nRF52840-DK does not have any sensors onboard, so we will only be able to send data like the core temperature of the silicon chip. Adding external sensors is outside the scope of this tutorial, but is definitely possible later. 
+In **Option 2**, the programmer and debugger are built into the nRF52840-DK, so no external one is required (lower cost, lower complexity). However, the nRF52840-DK does not have any sensors onboard, so we will only be able to send data like the core temperature of the silicon chip. Adding external sensors is outside the scope of this tutorial, but is definitely possible later.
 
 ## Step 2: Get device credentials
 
-If you have not yet done so, go through the [Golioth Getting Started Guide](https://docs.golioth.io/getting-started), in order to get credentials on the Golioth Cloud. 
+If you have not yet done so, go through the [Golioth Getting Started Guide](https://docs.golioth.io/getting-started), in order to get credentials on the Golioth Cloud.
 
 Grab credentials from [the "devices" tab on the Golioth Console](https://console.golioth.io/devices). The Pre-Shared Key Identification (PSK ID) and Pre-Shared Key (PSK) are similar to a username/password combination. Your node device will need these credentials to validate onto the Golioth network. We will program them in via the serial terminal once the device is programmed.
 
@@ -40,11 +40,11 @@ Grab credentials from [the "devices" tab on the Golioth Console](https://console
 
 ## Step 3: Install dependencies (first time Zephyr users)
 
-If this is your first time working with Zephyr, you will need to install the Zephyr support tools in order to build the firmware for the node device. If you have used Zephyr before, you almost certainly have all of these dependencies statisfied on your system and you can skip to Step 4. 
+If this is your first time working with Zephyr, you will need to install the Zephyr support tools in order to build the firmware for the node device. If you have used Zephyr before, you almost certainly have all of these dependencies statisfied on your system and you can skip to Step 4.
 
 ### Linux System Dependencies
 
-We are showing how to build in Linux, which is the preferred method. The tools below will ensure you have Python set up properly and are able to access other tools like `wget`. 
+We are showing how to build in Linux, which is the preferred method. The tools below will ensure you have Python set up properly and are able to access other tools like `wget`.
 
 ```
 sudo apt update
@@ -60,7 +60,7 @@ If this is the first time you are using Zephyr, you will also need the compiler 
 
 ```
 cd ~
-wget https://github.com/zephyrproject-rtos/sdk-ng/releases/download/v0.14.2/zephyr-sdk-0.14.2_linux-x86_64.tar.gz
+wget https://github.com/zephyrproject-rtos/sdk-ng/releases/download/v0.15.1/zephyr-sdk-0.15.1_linux-x86_64.tar.gz
 ```
 
 Unpack the archive and run the installer. The SDK will be placed in the ~/zephyr-sdk-0.14.2 directory:
@@ -81,10 +81,10 @@ sudo udevadm control --reload
 
 Now that dependencies are installed, we are ready to compile the node firmware using Zephyr, Golioth, and OpenThread.
 
-The repository we're using is called a "standalone repository" from the Golioth OpenThread Demo. This not only has the source code that you will be able to change, but it also calls out the dependencies in order to build all of the underlying tooling, such as the OpenThread stack. We will be using Nordic Semiconductor's Nordic Connect SDK (NCS) as part of the setup. This will allow us to build the firmware for the nRF52840, the chip inside the BT510. 
+The repository we're using is called a "standalone repository" from the Golioth OpenThread Demo. This not only has the source code that you will be able to change, but it also calls out the dependencies in order to build all of the underlying tooling, such as the OpenThread stack. We will be using Nordic Semiconductor's Nordic Connect SDK (NCS) as part of the setup. This will allow us to build the firmware for the nRF52840, the chip inside the BT510.
 
 First, we'll create a virtual environment for our system
-``` 
+```
 python3 -m venv ~/golioth-openthread/.venv
 source ~/golioth-openthread/.venv/bin/activate
 pip install west
@@ -102,7 +102,7 @@ Finally, we tell `west` (the meta tool build system) to go and fetch all of the 
 ```
 west update
 west zephyr-export
-pip install -r ~/golioth-ncs-workspace/zephyr/scripts/requirements.txt
+pip install -r ~/golioth-openthread/deps/zephyr/scripts/requirements.txt
 ```
 
 ## Step 5: Compile and flash the code
@@ -117,6 +117,17 @@ west flash
 ```
 
 The flash step requires that you have the SWD USB Programmer pluged into your computer and the board.
+
+:::note
+If you're using the nRF52840DK you'll need to disable the onboard sensors in the prj.conf
+
+# CONFIG_I2C=y
+# CONFIG_SENSOR=y
+# CONFIG_SI7055=y
+
+# CONFIG_ADC=y
+# CONFIG_ADC_SHELL=y
+:::
 
 ## Step 6: Add device to Thread network
 
@@ -144,12 +155,12 @@ You should see it report as `child` or `router`. You can also check the "Topolog
 After the node has successfully connected to the Thread network, it has access to the internet! You should be able to ping Google DNS servers from the node, just like you did from the OTBR:
 
 ```
-uart:~$ ot ping 64:ff9b::808:808    
+uart:~$ ot ping 64:ff9b::808:808
 ```
 
 ## Step 7: Add Golioth credentials
 
-Now that we can talk to the internet, let's get this thing hooked to Golioth. Doing so will give us a convenient way to collect data, send commands back to devices, and update firmware. We will be using the [Settings Shell](https://blog.golioth.io/new-feature-updating-zephyr-settings-from-the-device-shell-and-more/), which is already compiled into the code. 
+Now that we can talk to the internet, let's get this thing hooked to Golioth. Doing so will give us a convenient way to collect data, send commands back to devices, and update firmware. We will be using the [Settings Shell](https://blog.golioth.io/new-feature-updating-zephyr-settings-from-the-device-shell-and-more/), which is already compiled into the code.
 
 Once again we will connect to the UART on the device (you may still be connected) and assign your credentials gained in Step 2:
 
@@ -159,4 +170,4 @@ uart:~$ settings set golioth/psk <my-psk>
 uart:~$ kernel reboot cold
 ```
 
-The final command is the kernel shell, where we can send a reset command over the UART. Once a reboot happens, we should see that the device once again connects to the Thread network, and can now reach out to Golioth servers and start sending data. The settings are saved into a special area of flash that will persist between reboots. 
+The final command is the kernel shell, where we can send a reset command over the UART. Once a reboot happens, we should see that the device once again connects to the Thread network, and can now reach out to Golioth servers and start sending data. The settings are saved into a special area of flash that will persist between reboots.
