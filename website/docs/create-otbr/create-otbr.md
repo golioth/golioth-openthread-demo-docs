@@ -40,7 +40,7 @@ From a terminal on your Raspberry Pi, clone the OTBR repository and run the inst
 ```
 git clone https://github.com/openthread/ot-br-posix
 cd ot-br-posix
-./script/bootstrap
+WEB_GUI=1 ./script/bootstrap
 ```
 
 This will download dependencies in Linux.
@@ -48,8 +48,8 @@ This will download dependencies in Linux.
 Next, choose if you want to install the `otbr-agent` using Ethernet or Wi-Fi (only choose one).
 
 ```
-INFRA_IF_NAME=eth0 ./script/setup       # Ethernet
-INFRA_IF_NAME=wlan0 ./script/setup      # Wi-Fi
+INFRA_IF_NAME=eth0 WEB_GUI=1 ./script/setup       # Ethernet
+INFRA_IF_NAME=wlan0 WEB_GUI=1 ./script/setup      # Wi-Fi
 ```
 
 The script will install all of the elements to the RPi.
